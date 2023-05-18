@@ -17,7 +17,7 @@ package model
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/hyperjumptech/grule-rule-engine/pkg"
+	"github.com/farisekananda/grule-rule-engine/pkg"
 	"reflect"
 	"time"
 )

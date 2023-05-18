@@ -18,10 +18,10 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
-	"github.com/hyperjumptech/grule-rule-engine/ast/unique"
+	"github.com/farisekananda/grule-rule-engine/ast/unique"
 	"reflect"
 
-	"github.com/hyperjumptech/grule-rule-engine/pkg"
+	"github.com/farisekananda/grule-rule-engine/pkg"
 )
 
 const (

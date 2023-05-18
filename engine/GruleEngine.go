@@ -22,8 +22,8 @@ import (
 	"sort"
 	"time"
 
-	"github.com/hyperjumptech/grule-rule-engine/ast"
-	"github.com/hyperjumptech/grule-rule-engine/logger"
+	"github.com/farisekananda/grule-rule-engine/ast"
+	"github.com/farisekananda/grule-rule-engine/logger"
 )
 
 var (

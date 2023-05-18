@@ -16,9 +16,9 @@ package examples
 
 import (
 	"bytes"
-	"github.com/hyperjumptech/grule-rule-engine/ast"
-	"github.com/hyperjumptech/grule-rule-engine/builder"
-	"github.com/hyperjumptech/grule-rule-engine/pkg"
+	"github.com/farisekananda/grule-rule-engine/ast"
+	"github.com/farisekananda/grule-rule-engine/builder"
+	"github.com/farisekananda/grule-rule-engine/pkg"
 	"github.com/stretchr/testify/assert"
 	"io"
 	"os"

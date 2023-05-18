@@ -21,7 +21,7 @@ import (
 	"net/http"
 	"path/filepath"
 
-	"github.com/hyperjumptech/grule-rule-engine/logger"
+	"github.com/farisekananda/grule-rule-engine/logger"
 
 	"github.com/bmatcuk/doublestar"
 	"gopkg.in/src-d/go-billy.v4"

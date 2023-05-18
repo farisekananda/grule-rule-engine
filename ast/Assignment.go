@@ -17,8 +17,8 @@ package ast
 import (
 	"bytes"
 	"errors"
-	"github.com/hyperjumptech/grule-rule-engine/ast/unique"
-	"github.com/hyperjumptech/grule-rule-engine/pkg"
+	"github.com/farisekananda/grule-rule-engine/ast/unique"
+	"github.com/farisekananda/grule-rule-engine/pkg"
 )
 
 // NewAssignment will create new instance of Assignment AST Node

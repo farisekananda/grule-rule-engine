@@ -17,7 +17,7 @@ package ast
 //go:generate mockgen -destination=../mocks/ast/DataContext.go -package=mocksAst . IDataContext
 
 import (
-	"github.com/hyperjumptech/grule-rule-engine/model"
+	"github.com/farisekananda/grule-rule-engine/model"
 	"reflect"
 )
 

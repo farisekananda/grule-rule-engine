@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/hyperjumptech/grule-rule-engine/editor"
+	"github.com/farisekananda/grule-rule-engine/editor"
 	"github.com/sirupsen/logrus"
 )
 
