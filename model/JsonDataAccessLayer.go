@@ -17,9 +17,10 @@ package model
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/farisekananda/grule-rule-engine/pkg"
 	"reflect"
 	"time"
+
+	"github.com/farisekananda/grule-rule-engine/pkg"
 )
 
 var (
@@ -314,10 +315,35 @@ func (vn *JSONValueNode) CallFunction(funcName string, args ...reflect.Value) (r
 		funcValue := vn.data.MethodByName(funcName)
 		if funcValue.IsValid() {
 			rets := funcValue.Call(args)
+			errorInterface := reflect.TypeOf((*error)(nil)).Elem()
+
 			if len(rets) > 1 {
+				// Check whether the second return value is an error
+				if len(rets) == 2 && rets[1].Type().Implements(errorInterface) {
+					err := rets[1].Interface()
+
+					// if the error is not nil, return the error
+					if err != nil {
+						return reflect.Value{}, err.(error)
+					}
+
+					return rets[0], nil
+				}
 				return reflect.Value{}, fmt.Errorf("this node identified as \"%s\" calling function %s which returns multiple values, multiple value returns are not supported", vn.IdentifiedAs(), funcName)
 			}
 			if len(rets) == 1 {
+				// Check whether the retuned value is an error
+				if rets[0].Type().Implements(errorInterface) {
+					err := rets[0].Interface()
+
+					// if the error is not nil, return the error
+					if err != nil {
+						return reflect.Value{}, err.(error)
+					}
+
+					return rets[0], nil
+				}
+
 				return rets[0], nil
 			}
 			return reflect.Value{}, nil

@@ -43,13 +43,17 @@ func (mf *MyFact2) GetWhatToSay(sentence string) string {
 type Repo struct{}
 
 func (r *Repo) GetSentence() (string, error) {
-	return "Hello from the repo", errDefined
+	return "Hello from the repo", nil
+}
+
+func (r *Repo) GetSentenceWithError() (string, error) {
+	return "This will not shown", errDefined
 }
 
 var errDefined = errors.New("unfortunately this returns an error")
 
 func TestError(t *testing.T) {
-	myFact := &MyFact2{
+	successFact := MyFact2{
 		IntAttribute:     123,
 		StringAttribute:  "Some string value",
 		BooleanAttribute: true,
@@ -57,12 +61,12 @@ func TestError(t *testing.T) {
 		TimeAttribute:    time.Now(),
 	}
 	dataCtx := ast.NewDataContext()
-	err := dataCtx.Add("MF", myFact)
+	err := dataCtx.Add("MF", &successFact)
 	assert.NoError(t, err)
 
-	repo := &Repo{}
+	repo := Repo{}
 
-	err = dataCtx.Add("R", repo)
+	err = dataCtx.Add("R", &repo)
 	assert.NoError(t, err)
 
 	// Prepare knowledgebase library and load it with our rule.
@@ -78,6 +82,15 @@ rule CheckValues "Check the default values" salience 10 {
         MF.WhatToSay = MF.GetWhatToSay(Sentence);
 		Retract("CheckValues");
 }
+
+rule CheckValuesError "Check the default values with error" salience 10 {
+    when 
+        MF.IntAttribute == 1234 && MF.StringAttribute == "Some string value"
+    then
+        Sentence = R.GetSentenceWithError();
+        MF.WhatToSay = MF.GetWhatToSay(Sentence);
+		Retract("CheckValuesError");
+}
 `
 	byteArr := pkg.NewBytesResource([]byte(drls))
 	err = ruleBuilder.BuildRuleFromResource("Tutorial", "0.0.1", byteArr)
@@ -87,7 +100,27 @@ rule CheckValues "Check the default values" salience 10 {
 
 	engine := engine.NewGruleEngine()
 	err = engine.Execute(dataCtx, knowledgeBase)
+	assert.NoError(t, err)
+	assert.Equal(t, "Let say \"Hello from the repo\"", successFact.WhatToSay)
+	println(successFact.WhatToSay)
+
+	errFact := MyFact2{
+		IntAttribute:     1234,
+		StringAttribute:  "Some string value",
+		BooleanAttribute: true,
+		FloatAttribute:   1.234,
+		TimeAttribute:    time.Now(),
+	}
+
+	dataCtx2 := ast.NewDataContext()
+	err = dataCtx2.Add("MF", &errFact)
+	assert.NoError(t, err)
+
+	err = dataCtx2.Add("R", &repo)
+	assert.NoError(t, err)
+
+	err = engine.Execute(dataCtx2, knowledgeBase)
 	assert.ErrorIs(t, err, errDefined)
-	assert.Equal(t, "", myFact.WhatToSay)
-	println(myFact.WhatToSay)
+	assert.Equal(t, "", errFact.WhatToSay)
+	println(errFact.WhatToSay)
 }
