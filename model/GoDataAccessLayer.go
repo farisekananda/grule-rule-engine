@@ -416,10 +416,22 @@ func (node *GoValueNode) CallFunction(funcName string, args ...reflect.Value) (r
 		funcValue := node.thisValue.MethodByName(funcName)
 		if funcValue.IsValid() {
 			rets := funcValue.Call(args)
+			errorInterface := reflect.TypeOf((*error)(nil)).Elem()
+
 			if len(rets) > 1 {
+				// Check whether the second return value is error
+				if len(rets) == 2 && rets[1].Type().Implements(errorInterface) {
+					return rets[0], rets[1].Interface().(error)
+				}
+
 				return reflect.Value{}, fmt.Errorf("this node identified as \"%s\" calling function %s which returns multiple values, multiple value returns are not supported", node.IdentifiedAs(), funcName)
 			}
 			if len(rets) == 1 {
+				// Check whether the retuned value is an error
+				if rets[0].Type().Implements(errorInterface) {
+					return reflect.Value{}, rets[0].Interface().(error)
+				}
+
 				return rets[0], nil
 			}
 			return reflect.Value{}, nil
